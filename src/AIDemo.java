@@ -24,6 +24,7 @@ public class AIDemo {
     private static void AIHillClimbingSearch(AIState State) {
         System.out.println("\nAI HillClimbing  -->");
         try {
+            
             Problem problem =  new Problem(State,new AISuccessorFunction(), new AIGoalTest(),new AIHeuristicFunction());
             Search search =  new HillClimbingSearch();
             SearchAgent agent = new SearchAgent(problem,search);
