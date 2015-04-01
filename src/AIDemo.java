@@ -20,7 +20,8 @@ public class AIDemo {
         AIHillClimbingSearch(State);
         AISimulatedAnnealingSearch(State);
     }
-    
+   
+ 
     private static void AIHillClimbingSearch(AIState State) {
         System.out.println("\nAI HillClimbing  -->");
         try {
