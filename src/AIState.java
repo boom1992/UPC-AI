@@ -74,12 +74,12 @@ public class AIState {
 		}	
 		k=0; 
 		
-		for (int i=0; i<Users.size(); i++){
+		for (int i=0; i<Users.size(); i++) {
 			
-			if (firstRound){
-			
-				if(limitExceeded){
-					while((!(Users.get(j).isConductor()))&&(j<Users.size())) j++;
+			if (firstRound) {
+				if (limitExceeded) {
+					while (!Users.get(j).isConductor()&&(j<Users.size())) 
+						j++;
 					k++;
 					drives.get(k).driverId = j;
 					if(j>=Users.size()){ 
@@ -88,7 +88,7 @@ public class AIState {
 					}
 				}
 				
-				if (!(Users.get(i).isConductor())){
+				if (!Users.get(i).isConductor()){
 						
 					//what happens with user 0? (+1??)
 					drives.get(k).actions.add(i);
@@ -117,7 +117,8 @@ public class AIState {
 			
 		}
 		
-		for (int i = 0; i<drives.size();  i++) totalDistance += drives.get(i).distance;
+		for (int i = 0; i<drives.size();  i++) 
+			totalDistance += drives.get(i).distance;
 		totalActiveDrivers = M;
 		
 	}
@@ -141,7 +142,7 @@ public class AIState {
 	
 	public int getNumberOfDrivers(){return numberOfDrivers;}
 	
-	public void printState(){
+	public void printState() {
 		
 		Drive d = new Drive();
 		int j = 0;
