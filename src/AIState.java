@@ -2,6 +2,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.HashSet;
 
 import java.lang.Math;
 
@@ -10,17 +11,25 @@ import IA.Comparticion.Usuario;
 
 public class AIState {
 	
-	public static int numberOfUsers;
-	public static int numberOfDrivers;
+	public int numberOfUsers;
+	public int numberOfDrivers;
 	
-	public static String MERGE = "Merge";
 	public static String MOVE = "Move";
+	public static String EXCHANGE = "Exchange";
 	public static String SWAP = "Swap";
 			
 	public class Drive {
+		public Drive(Drive d) {
+			driverId = d.driverId;
+			distance = d.distance;
+			//FIXME: Check if this is working
+			actions = (ArrayList<Integer>)d.actions.clone();
+			currentCoords.x = d.currentCoords.x;
+			currentCoords.y = d.currentCoords.y;
+		}
 		int driverId; //index in Users ArrayList
 		int distance;
-		List<Integer> actions;
+		ArrayList<Integer> actions;
 		Coords currentCoords;
 	}
 	
@@ -35,6 +44,16 @@ public class AIState {
 	int totalDistance;
 	int totalActiveDrivers;
 	
+	public AIState(AIState state) {
+		numberOfUsers = state.numberOfUsers;
+		numberOfDrivers = state.numberOfDrivers;
+		for (Drive d : state.drives) {
+			drives.add(new Drive(d));
+		}
+		Users = state.Users;
+		totalDistance = state.totalDistance;
+		totalActiveDrivers = state.totalActiveDrivers;
+	}
 	/* Constructor
 	 * Generates a new instance of the problem with N users
 	 * and M drivers
@@ -133,6 +152,35 @@ public class AIState {
 		return retVal;
 	}
 	
+	public boolean actionRestrictionsValid(int driveId) {
+		Drive d = drives.get(driveId);
+		int numPpl = 0;
+		HashSet<Integer> usuarios = new HashSet<Integer>();
+		for (int val : d.actions) {
+			if (val > 0) {
+				numPpl++;
+				if (numPpl > 3)
+					return false;
+				usuarios.add(val);
+			} else {
+				if (!usuarios.contains(val))
+					return false;
+				numPpl--;
+			}
+		}
+		return true;
+	}
+	
+	public void swap(int driveId, int action1, int action2) {
+	    Drive d = drives.get(driveId);
+	    for (int i = 0; i != d.actions.size(); ++i) {
+	    	if (d.actions.get(i).equals(action1))
+	    		d.actions.set(i, action2);
+	    	else if (d.actions.get(i).equals(action2))
+	    		d.actions.set(i, action1);
+	    }
+	}
+	
 	
 	public int getTotalDistance(){ return totalDistance; }
 	
@@ -144,13 +192,13 @@ public class AIState {
 	
 	public void printState() {
 		
-		Drive d = new Drive();
 		int j = 0;
 		
 		System.out.println("TOTAL DISTANCE: " + Integer.toString(totalDistance));
 		System.out.println("ACTIVE DRIVERS: " + Integer.toString(totalActiveDrivers));
 		System.out.println("DRIVES: ");
-		
+
+		Drive d;
 		Iterator<Drive> iterator = drives.iterator();
 		while (iterator.hasNext()) {
 			d = iterator.next();
