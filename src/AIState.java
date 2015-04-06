@@ -181,6 +181,37 @@ public class AIState {
 	    }
 	}
 	
+	public void swap(int driveId1, int driveId2, int action1, int action2) {
+	    Drive d1 = drives.get(driveId1);
+	    Drive d2 = drives.get(driveId2);
+	    for (int i = 0; i != d1.actions.size(); ++i) {
+	    	if (d1.actions.get(i).equals(action1))
+	    		d1.actions.set(i, action2);
+	    	else if (d1.actions.get(i).equals(action1 * (-1)))
+	    		d1.actions.set(i, action2 * (-1));
+	    }
+	    
+	    for (int i = 0; i != d2.actions.size(); ++i) {
+	    	if (d2.actions.get(i).equals(action2))
+	    		d2.actions.set(i, action1);
+	    	else if (d2.actions.get(i).equals(action2 * (-1)))
+	    		d2.actions.set(i, action1 * (-1));
+	    }
+	}
+	
+	public void move(int driveId1, int driveId2, int action) {
+	    Drive d1 = drives.get(driveId1);
+	    Drive d2 = drives.get(driveId2);
+	    
+	    for (int i = 0; i != d1.actions.size(); ++i) {
+	    	if (d1.actions.get(i).equals(action) || 
+	    	    d1.actions.get(i).equals((-1) * action))
+	    		d1.actions.remove(i);
+	    }
+	    d2.actions.add(d2.actions.size() - 2, action * (-1));
+	    d2.actions.add(d2.actions.size() - 2, action);
+	}
+	
 	
 	public int getTotalDistance(){ return totalDistance; }
 	
