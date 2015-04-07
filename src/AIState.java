@@ -11,8 +11,8 @@ import IA.Comparticion.Usuario;
 
 public class AIState {
 	
-	public int numberOfUsers;
-	public int numberOfDrivers;
+	public static int numberOfUsers;
+	public static int numberOfDrivers;
 	
 	public static String MOVE = "Move";
 	public static String EXCHANGE = "Exchange";
@@ -23,7 +23,8 @@ public class AIState {
 			driverId = d.driverId;
 			distance = d.distance;
 			//FIXME: Check if this is working
-			actions = (ArrayList<Integer>)d.actions.clone();
+			actions = new ArrayList<Integer>(d.actions);
+			//actions = (ArrayList<Integer>)d.actions.clone();
 			currentCoords.x = d.currentCoords.x;
 			currentCoords.y = d.currentCoords.y;
 		}
@@ -39,21 +40,23 @@ public class AIState {
 	}
 	
 	ArrayList<Drive> drives;
-	ArrayList<Usuario> Users;
+	static ArrayList<Usuario> Users;
 	
 	int totalDistance;
 	int totalActiveDrivers;
 	
+	//copy constructor
 	public AIState(AIState state) {
-		numberOfUsers = state.numberOfUsers;
-		numberOfDrivers = state.numberOfDrivers;
+		//numberOfUsers = state.numberOfUsers;
+		//numberOfDrivers = state.numberOfDrivers;
 		for (Drive d : state.drives) {
 			drives.add(new Drive(d));
 		}
-		Users = state.Users;
+		//Users = state.Users;
 		totalDistance = state.totalDistance;
 		totalActiveDrivers = state.totalActiveDrivers;
 	}
+	
 	/* Constructor
 	 * Generates a new instance of the problem with N users
 	 * and M drivers
@@ -65,7 +68,7 @@ public class AIState {
 		
 		numberOfUsers = N;
 		numberOfDrivers = M;
-		Users = new Usuarios(N, M, seed);	
+		Users = new Usuarios(numberOfUsers, numberOfDrivers, seed);	
 		
 		totalDistance = 0;
 		totalActiveDrivers = 0;
@@ -76,15 +79,14 @@ public class AIState {
 		 * If the 30km limit is reached for every driver then we start again from the 1st.
 		 * The initial state is not necessarily  a solution.
 		 */
+			
 		
-		
-		
-		drives = new ArrayList<Drive>(M);
+		drives = new ArrayList<Drive>(numberOfDrivers);
 		drives.get(j).distance = 0;
 		
 		for (int i=0; i<Users.size(); i++){
 			if (Users.get(i).isConductor()) {
-				drives.get(k).actions.add(i);
+				drives.get(k).actions.add(i+1);
 				drives.get(k).currentCoords = new Coords();
 				drives.get(k).currentCoords.x = Users.get(i).getCoordOrigenX();
 				drives.get(k).currentCoords.y = Users.get(i).getCoordOrigenY();
@@ -110,8 +112,8 @@ public class AIState {
 				if (!Users.get(i).isConductor()){
 						
 					//what happens with user 0? (+1??)
-					drives.get(k).actions.add(i);
-					drives.get(k).actions.add(-i);
+					drives.get(k).actions.add(i+1);
+					drives.get(k).actions.add(-(i+1));
 					drives.get(k).distance += calculateDistance(drives.get(k), Users.get(i));
 					drives.get(k).currentCoords.x = Users.get(i).getCoordDestinoX();
 					drives.get(k).currentCoords.y = Users.get(i).getCoordDestinoY();
@@ -122,8 +124,8 @@ public class AIState {
 				}	
 			} else {
 				
-				drives.get(j).actions.add(i);
-				drives.get(j).actions.add(-i);
+				drives.get(j).actions.add(i+1);
+				drives.get(j).actions.add(-(i+1));
 				drives.get(j).distance += calculateDistance(drives.get(j), Users.get(i));
 				drives.get(j).currentCoords.x = Users.get(i).getCoordDestinoX();
 				drives.get(j).currentCoords.y = Users.get(i).getCoordDestinoY();
@@ -136,13 +138,21 @@ public class AIState {
 			
 		}
 		
+		//adding the last negative element to the actions lists
+		for (int i = 0; i<drives.size();  i++) {
+			drives.get(i).actions.add(-drives.get(i).actions.get(0));
+			drives.get(i).distance += Math.abs(drives.get(i).currentCoords.x - Users.get(drives.get(i).actions.get(0)-1).getCoordDestinoX()) +
+					Math.abs(drives.get(i).currentCoords.y - Users.get(drives.get(i).actions.get(0)-1).getCoordDestinoY());
+		}
+		
+		
 		for (int i = 0; i<drives.size();  i++) 
 			totalDistance += drives.get(i).distance;
-		totalActiveDrivers = M;
+		totalActiveDrivers = numberOfDrivers;
 		
 	}
 	
-	//Calculates the distance of the route that picks up and drops off user
+	//Calculates the distance of the route that picks up and drops off a user
 	public int calculateDistance(Drive drive , Usuario user){
 		int retVal = 0;
 		//Distance to pick up
@@ -151,6 +161,8 @@ public class AIState {
 		retVal += Math.abs(user.getCoordOrigenX() - user.getCoordDestinoX()) + Math.abs(user.getCoordOrigenY() - user.getCoordDestinoY());	
 		return retVal;
 	}
+	
+	/* OPERATORS */
 	
 	public boolean actionRestrictionsValid(int driveId) {
 		Drive d = drives.get(driveId);
@@ -243,6 +255,6 @@ public class AIState {
 		}
 	}
 	
-	/* OPERATORS */
+	
 	
 }
