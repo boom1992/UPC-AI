@@ -25,8 +25,12 @@ public class AIState {
 			//FIXME: Check if this is working
 			actions = new ArrayList<Integer>(d.actions);
 			//actions = (ArrayList<Integer>)d.actions.clone();
-			currentCoords.x = d.currentCoords.x;
-			currentCoords.y = d.currentCoords.y;
+			currentCoords = new Coords(d.currentCoords);
+		}
+		public Drive(int dId) {
+			driverId = dId;
+			actions = new ArrayList<Integer>();
+			currentCoords = new Coords();
 		}
 		int driverId; //index in Users ArrayList
 		int distance;
@@ -35,6 +39,13 @@ public class AIState {
 	}
 	
 	public class Coords{
+		public Coords() {
+			
+		}
+		public Coords(Coords c) {
+			x = c.x;
+			y = c.y;
+		}
 		int x;
 		int y;
 	}
@@ -49,6 +60,7 @@ public class AIState {
 	public AIState(AIState state) {
 		//numberOfUsers = state.numberOfUsers;
 		//numberOfDrivers = state.numberOfDrivers;
+		drives = new ArrayList<Drive>();
 		for (Drive d : state.drives) {
 			drives.add(new Drive(d));
 		}
@@ -79,41 +91,43 @@ public class AIState {
 		 * If the 30km limit is reached for every driver then we start again from the 1st.
 		 * The initial state is not necessarily  a solution.
 		 */
-			
-		
 		drives = new ArrayList<Drive>(numberOfDrivers);
-		drives.get(j).distance = 0;
+		//drives.get(j).distance = 0;
 		
-		for (int i=0; i<Users.size(); i++){
+		for (int i=0; i<Users.size(); i++) {
 			if (Users.get(i).isConductor()) {
-				drives.get(k).actions.add(i+1);
-				drives.get(k).currentCoords = new Coords();
-				drives.get(k).currentCoords.x = Users.get(i).getCoordOrigenX();
-				drives.get(k).currentCoords.y = Users.get(i).getCoordOrigenY();
-				k++;
+				Drive d = new Drive(i + 1);
+				d.actions.add(i+1);
+				d.driverId = i + 1;
+				d.currentCoords = new Coords();
+				d.currentCoords.x = Users.get(i).getCoordOrigenX();
+				d.currentCoords.y = Users.get(i).getCoordOrigenY();
+				drives.add(d);
 			}
 		}	
 		k=0; 
 		
-		for (int i=0; i<Users.size(); i++) {
+		/*for (int i=0; i<Users.size(); i++) {
 			
 			if (firstRound) {
 				if (limitExceeded) {
-					while (!Users.get(j).isConductor()&&(j<Users.size())) 
+					while (!Users.get(j).isConductor() && (j<Users.size())) 
 						j++;
-					k++;
 					drives.get(k).driverId = j;
-					if(j>=Users.size()){ 
+					k++;
+					if(j>=Users.size()) {
 						firstRound = false;
 						j=0;
 					}
 				}
+				//if (k == drives.size())
+				//	k = 0;
 				
-				if (!Users.get(i).isConductor()){
-						
+				if (!Users.get(i).isConductor()) {
 					//what happens with user 0? (+1??)
-					drives.get(k).actions.add(i+1);
-					drives.get(k).actions.add(-(i+1));
+					drives.get(k).actions.add(i + 1);
+					drives.get(k).actions.add(-(i + 1));
+					//FIXME: Why += and not = ? distance has to be recalculated wholly
 					drives.get(k).distance += calculateDistance(drives.get(k), Users.get(i));
 					drives.get(k).currentCoords.x = Users.get(i).getCoordDestinoX();
 					drives.get(k).currentCoords.y = Users.get(i).getCoordDestinoY();
@@ -121,6 +135,7 @@ public class AIState {
 					if (drives.get(k).distance>=30) {
 						limitExceeded = true;
 					}
+					++k;
 				}	
 			} else {
 				
@@ -136,6 +151,19 @@ public class AIState {
 			}
 			
 			
+		}*/
+		k = 0;
+		for (int i = 0; i != Users.size(); ++i) {
+			if (!Users.get(i).isConductor()) {
+				drives.get(k).actions.add(i+1);
+				drives.get(k).actions.add(-(i+1));
+				drives.get(k).distance += calculateDistance(drives.get(k), Users.get(i));
+				drives.get(k).currentCoords.x = Users.get(i).getCoordDestinoX();
+				drives.get(k).currentCoords.y = Users.get(i).getCoordDestinoY();
+				k++;
+				if (k == drives.size())
+					k = 0;
+			}
 		}
 		
 		//adding the last negative element to the actions lists
