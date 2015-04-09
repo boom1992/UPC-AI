@@ -13,6 +13,7 @@ public class AISuccessorFunction implements SuccessorFunction {
 		ArrayList retVal = new ArrayList();
 		AIState state = (AIState)s;
 		AIHeuristicFunction heuristic = new AIHeuristicFunction();
+		System.out.println("State heuristic: " + heuristic.getHeuristicValue(state));
 		
 		//SWAP
 		for (int i = 0; i != state.drives.size(); ++i) {
@@ -69,6 +70,11 @@ public class AISuccessorFunction implements SuccessorFunction {
 				}
 			}
 		}
+		System.out.println("Found " + retVal.size());
+		for (Object o : retVal) {
+			Successor suc = (Successor)o;
+			System.out.println("Successor-heuristic: " + heuristic.getHeuristicValue(suc.getState()));
+		} 
 		return retVal;
 	}
 
