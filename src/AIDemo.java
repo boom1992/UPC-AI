@@ -17,8 +17,8 @@ public class AIDemo {
     public static void main(String[] args){
     	// What value to use as a seed??
         AIState State = new AIState(10,4,1);
-        //AIHillClimbingSearch(State);
-        AISimulatedAnnealingSearch(State);
+        AIHillClimbingSearch(State);
+        //AISimulatedAnnealingSearch(State);
     }
    
  
@@ -30,7 +30,6 @@ public class AIDemo {
             Search search =  new HillClimbingSearch();
             SearchAgent agent = new SearchAgent(problem,search);
             
-            System.out.println();
             printActions(agent.getActions());
             printInstrumentation(agent.getInstrumentation());
         } catch (Exception e) {
@@ -47,8 +46,11 @@ public class AIDemo {
             //search.traceOn();
             SearchAgent agent = new SearchAgent(problem,search);
             
-            System.out.println();
-            printActions(agent.getActions());
+            System.out.println("PRINT ACTIONS:");
+            for (Object o : agent.getActions()) {
+            	System.out.println(o.toString());
+            }
+            //printActions(agent.getActions());
             printInstrumentation(agent.getInstrumentation());
         } catch (Exception e) {
             e.printStackTrace();
