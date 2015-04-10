@@ -60,6 +60,8 @@ public class AIState {
 	int totalDistance;
 	int totalActiveDrivers;
 	
+	int above30cnt;
+	
 	//copy constructor
 	public AIState(AIState state) {
 		//numberOfUsers = state.numberOfUsers;
@@ -89,6 +91,7 @@ public class AIState {
 		
 		totalDistance = 0;
 		totalActiveDrivers = 0;
+		above30cnt = 0;
 		
 		/* Generation of an initial state of type 1
 		 * Assign passengers to the 1st driver until we reach the 30km limit
@@ -180,8 +183,10 @@ public class AIState {
 		}
 		
 		
-		for (int i = 0; i<drives.size();  i++) 
+		for (int i = 0; i<drives.size();  i++) {
 			totalDistance += drives.get(i).distance;
+			if (drives.get(i).distance > 300) above30cnt += drives.get(i).distance - 300;
+		}
 		totalActiveDrivers = numberOfDrivers;
 
 	    //recalculateMetrics();	
@@ -215,8 +220,10 @@ public class AIState {
 		
 		totalDistance = 0;
 		totalActiveDrivers = 0;
+		above30cnt = 0;
 		for (int i = 0; i<drives.size();  i++) {
 			totalDistance += drives.get(i).distance;
+			if (drives.get(i).distance > 300) above30cnt += drives.get(i).distance - 300;
 			//if (drives.get(i).actions.size()!=0)
 				//totalActiveDrivers++;
 		}	
@@ -344,6 +351,8 @@ public class AIState {
 	public int getTotalDistance(){ return totalDistance; }
 	
 	public int getTotalActiveDrivers(){return totalActiveDrivers;}
+	
+	public int getTotalKilometresAbove30(){return above30cnt;}
 	
 	public int getNumberOfUsers(){return numberOfUsers;}
 	
