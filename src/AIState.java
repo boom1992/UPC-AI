@@ -217,10 +217,10 @@ public class AIState {
 		totalActiveDrivers = 0;
 		for (int i = 0; i<drives.size();  i++) {
 			totalDistance += drives.get(i).distance;
-			if (drives.get(i).actions.size()!=0)
-				totalActiveDrivers++;
+			//if (drives.get(i).actions.size()!=0)
+				//totalActiveDrivers++;
 		}	
-
+		totalActiveDrivers = drives.size();
 	}
 	
 	//Calculates the distance of the route that picks up and drops off a user
@@ -254,31 +254,36 @@ public class AIState {
 		return true;
 	}
 	
-	//swap two actions in the same actions list
+	//swap two actions in the same drive (actions list)
 	public void swap(int driveId, int action1, int action2) {
 	    Drive d = drives.get(driveId);
-	    for (int i = 0; i != d.actions.size(); ++i) {
-	    	if (d.actions.get(i).equals(action1))
-	    		d.actions.set(i, action2);
-	    	else if (d.actions.get(i).equals(action2))
-	    		d.actions.set(i, action1);
-	    }
+	    int temp;
+	    temp = d.actions.get(action1);
+	    d.actions.set(action1, d.actions.get(action2));
+	    d.actions.set(action2, temp);
+	    
 	    recalculateMetrics();
 	}
-	
-	public void swap(int driveId1, int driveId2, int action1, int action2) {
+	//exchange two passengers between two drives
+	public void exchange(int driveId1, int driveId2, int action1, int action2) {
 	    Drive d1 = drives.get(driveId1);
 	    Drive d2 = drives.get(driveId2);
 	    for (int i = 0; i != d1.actions.size(); ++i) {
-	    	if (d1.actions.get(i).equals(action1))
+	    	if (d1.actions.get(i).equals(action1)){
 	    		d1.actions.set(i, action2);
+	    		if (i==0)
+	    			d1.driverId = action2;
+	    	}
 	    	else if (d1.actions.get(i).equals(action1 * (-1)))
 	    		d1.actions.set(i, action2 * (-1));
 	    }
 	    
 	    for (int i = 0; i != d2.actions.size(); ++i) {
-	    	if (d2.actions.get(i).equals(action2))
+	    	if (d2.actions.get(i).equals(action2)){
 	    		d2.actions.set(i, action1);
+	    		if (i==0)
+	    			d2.driverId = action1;
+	    	}	
 	    	else if (d2.actions.get(i).equals(action2 * (-1)))
 	    		d2.actions.set(i, action1 * (-1));
 	    }
@@ -291,12 +296,48 @@ public class AIState {
 	    
 	    for (int i = 0; i != d1.actions.size(); ++i) {
 	    	if (d1.actions.get(i).equals(action) || 
-	    	    d1.actions.get(i).equals((-1) * action))
+	    	    d1.actions.get(i).equals((-1) * action)){
 	    		d1.actions.remove(i);
+	    		//quitar conductor
+	    	    if(drives.get(i).actions.size()==0)
+	    	    	drives.remove(i);
+	    	}
+	    		
 	    }
-	    d2.actions.add(d2.actions.size() - 2, action * (-1));
+	    	
+	    //
+	    d2.actions.add(d2.actions.size() - 1, action * (-1));
 	    d2.actions.add(d2.actions.size() - 2, action);
+	    
+	  
+	    
 	    recalculateMetrics();
+	}
+	
+	public void move(int driveId,int action){
+		Drive d = drives.get(driveId);
+		
+		for (int i = 0; i != d.actions.size(); ++i) {
+	    	if (d.actions.get(i).equals(action) || 
+	    	    d.actions.get(i).equals((-1) * action)){
+	    		d.actions.remove(i);
+	    		//quitar conductor
+	    	    if(drives.get(i).actions.size()==0)
+	    	    	drives.remove(i);
+	    	}
+	    		
+	    }
+		
+		Drive additionalDrive = new Drive(action);
+		additionalDrive.actions.add(action);
+		additionalDrive.actions.add(-action);
+		additionalDrive.currentCoords.x = Users.get(action-1).getCoordDestinoX();
+		additionalDrive.currentCoords.y = Users.get(action-1).getCoordDestinoY();
+		additionalDrive.distance = 0;
+		additionalDrive.distance += Math.abs(Users.get(action-1).getCoordOrigenX()-Users.get(action-1).getCoordDestinoX()) 
+				+ Math.abs(Users.get(action-1).getCoordOrigenY() - Users.get(action-1).getCoordDestinoY());
+				
+		drives.add(additionalDrive);
 	}
 	
 	
