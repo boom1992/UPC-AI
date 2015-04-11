@@ -8,10 +8,10 @@ import aima.search.framework.SuccessorFunction;
 public class AISuccessorFunctionSA implements SuccessorFunction {
 
 	@Override
-	public List getSuccessors(Object s) {
+	public List getSuccessors(Object obj) {
 		Random myRandom = new Random();
 		ArrayList retVal = new ArrayList();
-		AIState state = (AIState)s;
+		AIState state = (AIState)obj;
 		AIHeuristicFunction heuristic = new AIHeuristicFunction();
 		System.out.println("State heuristic: " + heuristic.getHeuristicValue(state));
 		int op,i,j,k,l;
@@ -146,6 +146,7 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 		for (Object o : retVal) {
 			Successor suc = (Successor)o;
 			System.out.println("Successor-heuristic: " + heuristic.getHeuristicValue(suc.getState()));
+			System.out.println(suc.getAction());
 		} 
 		return retVal;
 	}

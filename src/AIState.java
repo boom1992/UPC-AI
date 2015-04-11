@@ -192,6 +192,27 @@ public class AIState {
 	    //recalculateMetrics();	
 	}
 	
+	@Override
+	public String toString() {
+		String result = "\n";
+		result += "Total distance: " + totalDistance + "\n";
+		result += "Total drivers: " + totalActiveDrivers + "\n";
+		result += "Drives:\n";
+		for (Drive d : drives) {
+			result += "Conductor: " + d.driverId;
+			result += ", Actions: ";
+			for (int a : d.actions) {
+				if (a > 0)
+					result += ", Pick up " + a + " at " + Users.get(a - 1).getCoordOrigenX() + ", " + Users.get(a - 1).getCoordOrigenY();
+				else 
+					result += ", Drop off " + a + " at " + Users.get((-1)*a - 1).getCoordDestinoX() + ", " + Users.get((-1)*a - 1).getCoordDestinoY();
+			}
+			result += "; \n";
+		}
+		result += "\n";
+		return result;
+	}
+	
 	public void recalculateMetrics() {
 		for (int i = 0; i<drives.size();  i++) {
 			Drive d = drives.get(i);
