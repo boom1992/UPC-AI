@@ -79,10 +79,10 @@ public class AISuccessorFunction implements SuccessorFunction {
 	                retVal.add(new Successor(S, newState));
 	                
 	                //if the user is a conductor he can also be moved to a new drive
-	                if (state.Users.get(action-1).isConductor()) {
+	                if (state.Users.get(action - 1).isConductor()) {
 	                	AIState newState2 = new AIState(state);
 		            	newState2.move(i, action); 	
-		                S = AIState.MOVE + " " + newState2.toString();
+		                S = AIState.MOVE + " i: " + i + " action: " + action + "\n " + newState2.toString();
 		                retVal.add(new Successor(S, newState2));
 	                }
 	                	
@@ -92,7 +92,11 @@ public class AISuccessorFunction implements SuccessorFunction {
 		System.out.println("Found " + retVal.size());
 		for (Object o : retVal) {
 			Successor suc = (Successor)o;
-			System.out.println("Successor-heuristic: " + heuristic.getHeuristicValue(suc.getState()));
+			double heuristicValue = heuristic.getHeuristicValue(suc.getState());
+			System.out.println("Successor-heuristic: " + heuristicValue);
+			if (heuristicValue < 1) {
+				System.out.println(suc.getAction());
+			}
 		} 
 		return retVal;
 	}
