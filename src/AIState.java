@@ -189,7 +189,7 @@ public class AIState {
 		}
 		totalActiveDrivers = numberOfDrivers;
 
-	    //recalculateMetrics();	
+	    recalculateMetrics();	
 	}
 	
 	@Override
@@ -262,6 +262,12 @@ public class AIState {
 	}
 	
 	/* OPERATORS */
+	public boolean actionRestrictionsValid() {
+		for (int i = 0; i != drives.size(); ++i)
+			if (!actionRestrictionsValid(i))
+				return false;
+		return true;
+	}
 	
 	public boolean actionRestrictionsValid(int driveId) {
 		Drive d = drives.get(driveId);
@@ -285,8 +291,7 @@ public class AIState {
 	//swap two actions in the same drive (actions list)
 	public void swap(int driveId, int action1, int action2) {
 	    Drive d = drives.get(driveId);
-	    int temp;
-	    temp = d.actions.get(action1);
+	    int temp = d.actions.get(action1);
 	    d.actions.set(action1, d.actions.get(action2));
 	    d.actions.set(action2, temp);
 	    
@@ -318,54 +323,37 @@ public class AIState {
 	    recalculateMetrics();
 	}
 	
-	public void move(int driveId1, int driveId2, int action) {
+	public void move(int driveId1, int driveId2, int action, int index1, int index2) {
 	    Drive d1 = drives.get(driveId1);
 	    Drive d2 = drives.get(driveId2);
+	    d1.actions.remove((Object)action);
+	    d1.actions.remove((Object)((-1) * action));
 	    
-	    for (int i = 0; i != d1.actions.size(); ++i) {
-	    	if (d1.actions.get(i).equals(action) || 
-	    	    d1.actions.get(i).equals((-1) * action)){
-	    		d1.actions.remove(i);
-	    		//quitar conductor
-	    	    if(drives.get(i).actions.size()==0)
-	    	    	drives.remove(i);
-	    	}
-	    		
-	    }
+	    if (d1.actions.size() == 0)
+	    	drives.remove(d1);
 	    	
 	    //
-	    d2.actions.add(d2.actions.size() - 1, action * (-1));
-	    d2.actions.add(d2.actions.size() - 2, action);
-	    
-	  
+	    d2.actions.add(index2, action * (-1));
+	    d2.actions.add(index1, action);
 	    
 	    recalculateMetrics();
 	}
 	
-	public void move(int driveId,int action){
+	public void move(int driveId, int action) {
 		Drive d = drives.get(driveId);
+		d.actions.remove((Object)action);
+		d.actions.remove((Object)((-1) * action));
 		
-		for (int i = 0; i != d.actions.size(); ++i) {
-	    	if (d.actions.get(i).equals(action) || 
-	    	    d.actions.get(i).equals((-1) * action)){
-	    		d.actions.remove(i);
-	    		//quitar conductor
-	    	    if(drives.get(i).actions.size()==0)
-	    	    	drives.remove(i);
-	    	}
-	    		
-	    }
+		if (d.actions.size() == 0)
+			drives.remove(d);
 		
 		Drive additionalDrive = new Drive(action);
 		additionalDrive.actions.add(action);
-		additionalDrive.actions.add(-action);
-		additionalDrive.currentCoords.x = Users.get(action-1).getCoordDestinoX();
-		additionalDrive.currentCoords.y = Users.get(action-1).getCoordDestinoY();
-		additionalDrive.distance = 0;
-		additionalDrive.distance += Math.abs(Users.get(action-1).getCoordOrigenX()-Users.get(action-1).getCoordDestinoX()) 
-				+ Math.abs(Users.get(action-1).getCoordOrigenY() - Users.get(action-1).getCoordDestinoY());
-				
+		additionalDrive.actions.add((-1) * action);
+
 		drives.add(additionalDrive);
+		
+		recalculateMetrics();
 	}
 	
 	

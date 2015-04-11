@@ -8,7 +8,7 @@ public class AIHeuristicFunction2 implements HeuristicFunction {
 		AIState state = (AIState)arg0;
 		
 		int penalty = 20;
-		int dWeight = 10;
+		int dWeight = 100;
 		
 		return state.totalDistance + state.totalActiveDrivers*dWeight + state.above30cnt*penalty;
 	}

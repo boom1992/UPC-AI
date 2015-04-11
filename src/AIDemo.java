@@ -1,4 +1,5 @@
 
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -14,9 +15,9 @@ import aima.search.informed.SimulatedAnnealingSearch;
 
 public class AIDemo {
     
-    public static void main(String[] args){
+    public static void main(String[] args)
     	// What value to use as a seed?
-        AIState State = new AIState(10,5,1);
+        AIState State = new AIState(10,5,1)
         AIHillClimbingSearch(State);
         //AISimulatedAnnealingSearch(State);
     }
@@ -26,7 +27,7 @@ public class AIDemo {
         System.out.println("\nAI HillClimbing  -->");
         try {
             
-            Problem problem =  new Problem(State,new AISuccessorFunction(), new AIGoalTest(),new AIHeuristicFunction());
+            Problem problem =  new Problem(State,new AISuccessorFunction(), new AIGoalTest(),new AIHeuristicFunction2());
             Search search =  new HillClimbingSearch();
             SearchAgent agent = new SearchAgent(problem,search);
             

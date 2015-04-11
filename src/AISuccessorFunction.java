@@ -18,8 +18,8 @@ public class AISuccessorFunction implements SuccessorFunction {
 		//SWAP
 		for (int i = 0; i != state.drives.size(); ++i) {
 			AIState.Drive d = state.drives.get(i);
-			for (int j = 1; j != d.actions.size() - 1; ++j) {
-		        for (int k = j + 1; k != d.actions.size() - 1; ++k) {
+			for (int j = 1; j < d.actions.size() - 1; ++j) {
+		        for (int k = j + 1; k < d.actions.size() - 1; ++k) {
 	            	AIState newState = new AIState(state);
 	            	newState.swap(i, j, k);
 	            	if (newState.actionRestrictionsValid(i)) {
@@ -64,6 +64,8 @@ public class AISuccessorFunction implements SuccessorFunction {
 				if (i == j)
 					continue;
 				
+				AIState.Drive d2 = state.drives.get(j);
+				
 				for (int k = 0; k != d1.actions.size(); ++k) {
 					int action = d1.actions.get(k);
 					
@@ -73,16 +75,23 @@ public class AISuccessorFunction implements SuccessorFunction {
 					if ((k==0)&&(d1.actions.size()!=2))
 						continue;
 					
-	            	AIState newState = new AIState(state);
-	            	newState.move(i, j, action); 	
-	                String S = AIState.MOVE + " " + newState.toString();
-	                retVal.add(new Successor(S, newState));
+					//Determine the positions to be moved to
+					for (int ind1 = 1; ind1 < (d2.actions.size() - 1); ++ind1) {
+						for (int ind2 = ind1 + 1; ind2 < (d2.actions.size() - 1); ++ind2) {
+							AIState newState = new AIState(state);
+		            		newState.move(i, j, action, ind1, ind2);
+		            		if (newState.actionRestrictionsValid()) {
+		            			String S = AIState.MOVE + " i: " + i + ", j: " + j + ", action: " + action + ", ind1: " + ind1 + ", ind2: " + ind2 + ": " + newState.toString();
+		                		retVal.add(new Successor(S, newState));
+		            		}
+						}
+					}
 	                
 	                //if the user is a conductor he can also be moved to a new drive
-	                if (state.Users.get(action-1).isConductor()){
+	                if (state.Users.get(action - 1).isConductor()) {
 	                	AIState newState2 = new AIState(state);
 		            	newState2.move(i, action); 	
-		                S = AIState.MOVE + " " + newState2.toString();
+		                String S = AIState.MOVE + " i: " + i + " action: " + action + "\n " + newState2.toString();
 		                retVal.add(new Successor(S, newState2));
 	                }
 	                	
@@ -92,7 +101,11 @@ public class AISuccessorFunction implements SuccessorFunction {
 		System.out.println("Found " + retVal.size());
 		for (Object o : retVal) {
 			Successor suc = (Successor)o;
-			System.out.println("Successor-heuristic: " + heuristic.getHeuristicValue(suc.getState()));
+			double heuristicValue = heuristic.getHeuristicValue(suc.getState());
+			System.out.println("Successor-heuristic: " + heuristicValue);
+			if (heuristicValue < 1) {
+				System.out.println(suc.getAction());
+			}
 		} 
 		return retVal;
 	}
