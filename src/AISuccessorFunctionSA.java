@@ -26,17 +26,23 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 			while (!valid){
 				if (state.drives.size()>0)
 					i = myRandom.nextInt(state.drives.size());
-				else 
+				else {
+					System.out.println("invalid");
 					continue;
+				}	
 				AIState.Drive d = state.drives.get(i);
 				if (d.actions.size() - 2 > 0)
 					j = 1 + myRandom.nextInt(d.actions.size() - 2);
-				else 
+				else {
+					System.out.println("invalid");
 					continue;
+				}
 				if (d.actions.size() - 1 > (j+1))
 					k = j+1 + myRandom.nextInt(d.actions.size() - 1 - (j+1));
-				else
+				else{
+					System.out.println("invalid");
 					continue;
+				}
 				AIState newState = new AIState(state);
 				newState.swap(i, j, k);
 				
@@ -53,25 +59,33 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 			while (!valid){
 				if (state.drives.size()>0)
 					i = myRandom.nextInt(state.drives.size());
-				else 
+				else {
+					System.out.println("invalid");
 					continue;
+				}
 				AIState.Drive d1 = state.drives.get(i);
 				if (state.drives.size() - (i+1) >0)
 					j = i+1 + myRandom.nextInt(state.drives.size() - (i+1));
-				else 
+				else {
+					System.out.println("invalid");
 					continue;
+				}
 				AIState.Drive d2 = state.drives.get(j);
 				if (d1.actions.size()>0)
 					k = myRandom.nextInt(d1.actions.size());
-				else 
+				else {
+					System.out.println("invalid");
 					continue;
+				}
 				int id1 = d1.actions.get(k);
 				if (id1 < 0)
 					continue;
 				if (d2.actions.size()>0)
 					l = myRandom.nextInt(d2.actions.size());
-				else 
+				else {
+					System.out.println("invalid");
 					continue;
+				}
 				int id2 = d2.actions.get(l);
 				if (id2 < 0)
 					continue;
@@ -93,19 +107,25 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 			while (!valid){
 				if (state.drives.size()>0)
 					i = myRandom.nextInt(state.drives.size());
-				else 
+				else {
+					System.out.println("invalid");
 					continue;
+				}
 				AIState.Drive d1 = state.drives.get(i);
 				if (state.drives.size()>0)
 					j = myRandom.nextInt(state.drives.size());
-				else
+				else{
+					System.out.println("invalid");
 					continue;
+				}
 				if (i == j)
 					continue;
 				if (d1.actions.size()>0)
 					k = myRandom.nextInt(d1.actions.size());
-				else
+				else{
+					System.out.println("invalid");
 					continue;
+				}
 				int action = d1.actions.get(k);
 				if (action<0)
 					continue;
