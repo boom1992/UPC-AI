@@ -80,7 +80,7 @@ public class AIState {
 	 * Generates a new instance of the problem with N users
 	 * and M drivers
 	 */
-	public AIState(int N, int M, int seed){
+	public AIState(int N, int M, int seed) {
 		
 		int j=0, k=0;
 		boolean limitExceeded = false, firstRound = true;
@@ -113,54 +113,7 @@ public class AIState {
 				d.currentCoords.y = Users.get(i).getCoordOrigenY();
 				drives.add(d);
 			}
-		}	
-		//k=0; 
-		
-		/*for (int i=0; i<Users.size(); i++) {
-			
-			if (firstRound) {
-				if (limitExceeded) {
-					while (!Users.get(j).isConductor() && (j<Users.size())) 
-						j++;
-					drives.get(k).driverId = j;
-					k++;
-					if(j>=Users.size()) {
-						firstRound = false;
-						j=0;
-					}
-				}
-				//if (k == drives.size())
-				//	k = 0;
-				
-				if (!Users.get(i).isConductor()) {
-					//what happens with user 0? (+1??)
-					drives.get(k).actions.add(i + 1);
-					drives.get(k).actions.add(-(i + 1));
-					//FIXME: Why += and not = ? distance has to be recalculated wholly
-					drives.get(k).distance += calculateDistance(drives.get(k), Users.get(i));
-					drives.get(k).currentCoords.x = Users.get(i).getCoordDestinoX();
-					drives.get(k).currentCoords.y = Users.get(i).getCoordDestinoY();
-			
-					if (drives.get(k).distance>=30) {
-						limitExceeded = true;
-					}
-					++k;
-				}	
-			} else {
-				
-				drives.get(j).actions.add(i+1);
-				drives.get(j).actions.add(-(i+1));
-				drives.get(j).distance += calculateDistance(drives.get(j), Users.get(i));
-				drives.get(j).currentCoords.x = Users.get(i).getCoordDestinoX();
-				drives.get(j).currentCoords.y = Users.get(i).getCoordDestinoY();
-				j++;
-				
-				if (j>=drives.size()) j=0;
-				
-			}
-			
-			
-		}*/
+		}
 		k = 0;
 		for (int i = 0; i != Users.size(); ++i) {
 			if (!Users.get(i).isConductor()) {
@@ -192,9 +145,78 @@ public class AIState {
 	    recalculateMetrics();	
 	}
 	
+	public AIState(int N, int M, int seed, int rand) {
+		
+		int j=0, k=0;
+		boolean limitExceeded = false, firstRound = true;
+		
+		numberOfUsers = N;
+		numberOfDrivers = M;
+		Users = new Usuarios(numberOfUsers, numberOfDrivers, seed);	
+		
+		totalDistance = 0;
+		totalActiveDrivers = 0;
+		above30cnt = 0;
+		
+		/* Generation of an initial state of type 1
+		 * Assign passengers to the 1st driver until we reach the 30km limit
+		 * then move on to the 2nd one, etc.
+		 * If the 30km limit is reached for every driver then we start again from the 1st.
+		 * The initial state is not necessarily  a solution.
+		 */
+		drives = new ArrayList<Drive>(numberOfDrivers);
+		
+		for (int i=0; i<Users.size(); i++) {
+			if (Users.get(i).isConductor()) {
+				Drive d = new Drive(i + 1);
+				d.actions.add(i+1);
+				d.driverId = i + 1;
+				d.distance =0;
+				d.currentCoords = new Coords();
+				d.currentCoords.x = Users.get(i).getCoordOrigenX();
+				d.currentCoords.y = Users.get(i).getCoordOrigenY();
+				drives.add(d);
+			}
+		}
+		k = 0;
+		for (int i = 0; i != Users.size(); ++i) {
+			if (!Users.get(i).isConductor()) {
+				drives.get(k).actions.add(i+1);
+				drives.get(k).actions.add(-(i+1));
+				drives.get(k).distance += calculateDistance(drives.get(k), Users.get(i));
+				drives.get(k).currentCoords.x = Users.get(i).getCoordDestinoX();
+				drives.get(k).currentCoords.y = Users.get(i).getCoordDestinoY();
+				if (drives.get(k).distance > 300)
+				    k++;
+				if (k == drives.size())
+					k = 0;
+			}
+		}
+		
+		//adding the last negative element to the actions lists
+		for (int i = 0; i<drives.size();  i++) {
+			drives.get(i).actions.add(-drives.get(i).actions.get(0));
+			drives.get(i).distance += Math.abs(drives.get(i).currentCoords.x - Users.get(drives.get(i).actions.get(0)-1).getCoordDestinoX()) +
+					Math.abs(drives.get(i).currentCoords.y - Users.get(drives.get(i).actions.get(0)-1).getCoordDestinoY());
+		}
+		
+		
+		for (int i = 0; i<drives.size();  i++) {
+			totalDistance += drives.get(i).distance;
+			if (drives.get(i).distance > 300) above30cnt += drives.get(i).distance - 300;
+		}
+		totalActiveDrivers = numberOfDrivers;
+
+	    recalculateMetrics();	
+	}
+	
 	@Override
 	public String toString() {
+		AIHeuristicFunction func1 = new AIHeuristicFunction();
+		AIHeuristicFunction2 func2 = new AIHeuristicFunction2();
 		String result = "\n";
+		result += "Heuristic: " + func1.getHeuristicValue(this) + "\n";
+		result += "Heuristic2: " + func2.getHeuristicValue(this) + "\n";
 		result += "Total distance: " + totalDistance + "\n";
 		result += "Total drivers: " + totalActiveDrivers + "\n";
 		result += "Drives:\n";
