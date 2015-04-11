@@ -285,8 +285,7 @@ public class AIState {
 	//swap two actions in the same drive (actions list)
 	public void swap(int driveId, int action1, int action2) {
 	    Drive d = drives.get(driveId);
-	    int temp;
-	    temp = d.actions.get(action1);
+	    int temp = d.actions.get(action1);
 	    d.actions.set(action1, d.actions.get(action2));
 	    d.actions.set(action2, temp);
 	    

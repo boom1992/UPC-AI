@@ -18,8 +18,8 @@ public class AISuccessorFunction implements SuccessorFunction {
 		//SWAP
 		for (int i = 0; i != state.drives.size(); ++i) {
 			AIState.Drive d = state.drives.get(i);
-			for (int j = 1; j != d.actions.size() - 1; ++j) {
-		        for (int k = j + 1; k != d.actions.size() - 1; ++k) {
+			for (int j = 1; j < d.actions.size() - 1; ++j) {
+		        for (int k = j + 1; k < d.actions.size() - 1; ++k) {
 	            	AIState newState = new AIState(state);
 	            	newState.swap(i, j, k);
 	            	if (newState.actionRestrictionsValid(i)) {
@@ -74,12 +74,12 @@ public class AISuccessorFunction implements SuccessorFunction {
 						continue;
 					
 	            	AIState newState = new AIState(state);
-	            	newState.move(i, j, action); 	
+	            	newState.move(i, j, action);
 	                String S = AIState.MOVE + " " + newState.toString();
 	                retVal.add(new Successor(S, newState));
 	                
 	                //if the user is a conductor he can also be moved to a new drive
-	                if (state.Users.get(action-1).isConductor()){
+	                if (state.Users.get(action-1).isConductor()) {
 	                	AIState newState2 = new AIState(state);
 		            	newState2.move(i, action); 	
 		                S = AIState.MOVE + " " + newState2.toString();
