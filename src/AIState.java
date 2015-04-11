@@ -171,7 +171,7 @@ public class AIState {
 				Drive d = new Drive(i + 1);
 				d.actions.add(i+1);
 				d.driverId = i + 1;
-				d.distance =0;
+				d.distance = 0;
 				d.currentCoords = new Coords();
 				d.currentCoords.x = Users.get(i).getCoordOrigenX();
 				d.currentCoords.y = Users.get(i).getCoordOrigenY();
