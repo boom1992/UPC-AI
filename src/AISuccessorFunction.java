@@ -79,8 +79,10 @@ public class AISuccessorFunction implements SuccessorFunction {
 					for (int ind1 = 1; ind1 < (d2.actions.size() - 1); ++ind1) {
 						for (int ind2 = ind1 + 1; ind2 < (d2.actions.size() - 1); ++ind2) {
 							AIState newState = new AIState(state);
-		            		newState.move(i, j, action, ind1, ind2);
-		            		if (newState.actionRestrictionsValid()) {
+		            		boolean removes = newState.move(i, j, action, ind1, ind2);
+		            		boolean valid = removes ? newState.actionRestrictionsValid() : 
+		            			(newState.actionRestrictionsValid(i) && newState.actionRestrictionsValid(j));
+		            		if (valid) {
 		            			String S = AIState.MOVE + " i: " + i + ", j: " + j + ", action: " + action + ", ind1: " + ind1 + ", ind2: " + ind2 + ": " + newState.toString();
 		                		retVal.add(new Successor(S, newState));
 		            		}

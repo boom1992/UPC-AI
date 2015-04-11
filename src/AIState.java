@@ -212,14 +212,14 @@ public class AIState {
 	
 	@Override
 	public String toString() {
-		AIHeuristicFunction func1 = new AIHeuristicFunction();
-		AIHeuristicFunction2 func2 = new AIHeuristicFunction2();
+		//AIHeuristicFunction func1 = new AIHeuristicFunction();
+		//AIHeuristicFunction2 func2 = new AIHeuristicFunction2();
 		String result = "\n";
-		result += "Heuristic: " + func1.getHeuristicValue(this) + "\n";
-		result += "Heuristic2: " + func2.getHeuristicValue(this) + "\n";
+		//result += "Heuristic: " + func1.getHeuristicValue(this) + "\n";
+		//result += "Heuristic2: " + func2.getHeuristicValue(this) + "\n";
 		result += "Total distance: " + totalDistance + "\n";
 		result += "Total drivers: " + totalActiveDrivers + "\n";
-		result += "Drives:\n";
+		/*result += "Drives:\n";
 		for (Drive d : drives) {
 			result += "Conductor: " + d.driverId;
 			result += ", Actions: ";
@@ -230,7 +230,7 @@ public class AIState {
 					result += ", Drop off " + a + " at " + Users.get((-1)*a - 1).getCoordDestinoX() + ", " + Users.get((-1)*a - 1).getCoordDestinoY();
 			}
 			result += "; \n";
-		}
+		}*/
 		result += "\n";
 		return result;
 	}
@@ -345,20 +345,23 @@ public class AIState {
 	    recalculateMetrics();
 	}
 	
-	public void move(int driveId1, int driveId2, int action, int index1, int index2) {
-	    Drive d1 = drives.get(driveId1);
+	public boolean move(int driveId1, int driveId2, int action, int index1, int index2) {
+	    boolean removes = false;
+		Drive d1 = drives.get(driveId1);
 	    Drive d2 = drives.get(driveId2);
 	    d1.actions.remove((Object)action);
 	    d1.actions.remove((Object)((-1) * action));
 	    
-	    if (d1.actions.size() == 0)
-	    	drives.remove(d1);
-	    	
+	    if (d1.actions.size() == 0) {
+	    	drives.remove(driveId1);
+	    	removes = true;
+		}
 	    //
 	    d2.actions.add(index2, action * (-1));
 	    d2.actions.add(index1, action);
 	    
 	    recalculateMetrics();
+	    return removes;
 	}
 	
 	public void move(int driveId, int action) {

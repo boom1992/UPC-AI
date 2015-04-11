@@ -18,9 +18,9 @@ public class AIDemo {
     public static void main(String[] args){
 
     	// What value to use as a seed?
-        AIState State = new AIState(50,25,1);
-        //AIHillClimbingSearch(State);
-        AISimulatedAnnealingSearch(State);
+        AIState State = new AIState(200,100,1);
+        AIHillClimbingSearch(State);
+        //AISimulatedAnnealingSearch(State);
 
     }
    
