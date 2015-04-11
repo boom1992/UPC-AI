@@ -327,8 +327,8 @@ public class AIState {
 	    	drives.remove(d1);
 	    	
 	    //
-	    d2.actions.add(index2, action);
-	    d2.actions.add(index1, action * (-1));
+	    d2.actions.add(index2, action * (-1));
+	    d2.actions.add(index1, action);
 	    
 	    recalculateMetrics();
 	}

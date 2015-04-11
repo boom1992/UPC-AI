@@ -80,7 +80,7 @@ public class AISuccessorFunction implements SuccessorFunction {
 						for (int ind2 = ind1 + 1; ind2 < (d2.actions.size() - 1); ++ind2) {
 							AIState newState = new AIState(state);
 		            		newState.move(i, j, action, ind1, ind2);
-		            		String S = AIState.MOVE + " i: " + i + ", j: " + j + ", ind1: " + ind1 + ", ind2: " + ind2 + ": " + newState.toString();
+		            		String S = AIState.MOVE + " i: " + i + ", j: " + j + ", action: " + action + ", ind1: " + ind1 + ", ind2: " + ind2 + ": " + newState.toString();
 		                	retVal.add(new Successor(S, newState));
 						}
 					}
