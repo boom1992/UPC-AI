@@ -16,21 +16,23 @@ import aima.search.informed.SimulatedAnnealingSearch;
 public class AIDemo {
     
     public static void main(String[] args){
+
     	// What value to use as a seed?
         AIState State = new AIState(50,25,1);
         //AIHillClimbingSearch(State);
         AISimulatedAnnealingSearch(State);
+
     }
    
  
     private static void AIHillClimbingSearch(AIState State) {
         System.out.println("\nAI HillClimbing  -->");
         try {
-            
-            Problem problem =  new Problem(State,new AISuccessorFunction(), new AIGoalTest(),new AIHeuristicFunction2());
+            Problem problem =  new Problem(State,new AISuccessorFunction(), new AIGoalTest(),new AIHeuristicFunction());
             Search search =  new HillClimbingSearch();
             SearchAgent agent = new SearchAgent(problem,search);
             
+            System.out.println("INITIAL STATE: " + State.toString());
             printActions(agent.getActions());
             printInstrumentation(agent.getInstrumentation());
         } catch (Exception e) {
