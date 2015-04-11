@@ -100,6 +100,7 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 					j = myRandom.nextInt(state.drives.size());
 				else
 					continue;
+				AIState.Drive d2 = state.drives.get(j);
 				if (i == j)
 					continue;
 				if (d1.actions.size()>0)
@@ -113,8 +114,16 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 				if ((k==0)&&(d1.actions.size()!=2))
 					continue;
 				
+				int ind1 = myRandom.nextInt(d2.actions.size() - 1);
+				if (ind1<1)
+					continue;
+				
+				int ind2 = myRandom.nextInt(d2.actions.size() - 1);
+				if (ind2<1 || ind2 <= ind1)
+					continue;
+				
 				AIState newState = new AIState(state);
-            	newState.move(i, j, action); 	
+            	newState.move(i, j, action, ind1, ind2); 	
                 String S = AIState.MOVE + " " + newState.toString();
                 retVal.add(new Successor(S, newState));
                 valid = true;

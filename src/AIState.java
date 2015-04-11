@@ -317,22 +317,18 @@ public class AIState {
 	    recalculateMetrics();
 	}
 	
-	public void move(int driveId1, int driveId2, int action) {
+	public void move(int driveId1, int driveId2, int action, int index1, int index2) {
 	    Drive d1 = drives.get(driveId1);
 	    Drive d2 = drives.get(driveId2);
+	    d1.actions.remove((Object)action);
+	    d1.actions.remove((Object)((-1) * action));
 	    
-	    for (int i = 0; i != d1.actions.size(); ++i) {
-	    	if (d1.actions.get(i).equals(action) || 
-	    	    d1.actions.get(i).equals((-1) * action)){
-	    		d1.actions.remove(i);
-	    	}
-	    }
 	    if (d1.actions.size() == 0)
 	    	drives.remove(d1);
 	    	
 	    //
-	    d2.actions.add(d2.actions.size() - 1, action * (-1));
-	    d2.actions.add(d2.actions.size() - 2, action);
+	    d2.actions.add(index2, action);
+	    d2.actions.add(index1, action * (-1));
 	    
 	    recalculateMetrics();
 	}
