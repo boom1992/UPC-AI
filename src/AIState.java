@@ -262,6 +262,12 @@ public class AIState {
 	}
 	
 	/* OPERATORS */
+	public boolean actionRestrictionsValid() {
+		for (int i = 0; i != drives.size(); ++i)
+			if (!actionRestrictionsValid(i))
+				return false;
+		return true;
+	}
 	
 	public boolean actionRestrictionsValid(int driveId) {
 		Drive d = drives.get(driveId);
