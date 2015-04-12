@@ -20,7 +20,7 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 		
 	while (!opfound){
 		//Pick an operator at random (0 - Swap, 1 - Exchange, 2 - Move)
-		op = myRandom.nextInt(3);
+		op = myRandom.nextInt(2);
 		
 		if (op == 0){	
 			//SWAP	
@@ -36,19 +36,15 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 				
 				if (d.actions.size() - 2 > 0)
 					j = 1 + myRandom.nextInt(d.actions.size() - 2);
-				else {
-					System.out.println("invalid1");
+				else 
 					continue;
-				}
 				
 				if (d.actions.size() - 4 > 0){
 					k = 1 + myRandom.nextInt(d.actions.size() - 2);
 					//System.out.println("here k = "+ k);	
 				}
-				else{
-					System.out.println("invalid2");
+				else
 					continue;
-				}
 				if (k ==j) continue;
 				
 				AIState newState = new AIState(state);
@@ -69,35 +65,31 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 			
 				if (state.drives.size()>0)
 					i = myRandom.nextInt(state.drives.size());
-				else {
-					System.out.println("invalid3");
+				else 
 					continue;
-				}
+				
 				AIState.Drive d1 = state.drives.get(i);
 				if (state.drives.size()>0)
 					j = myRandom.nextInt(state.drives.size());
-				else {
-					System.out.println("invalid4");
+				else 
 					continue;
-				}
+			
 				if (i == j) continue;
 				
 				AIState.Drive d2 = state.drives.get(j);
 				if (d1.actions.size()>0)
 					k = myRandom.nextInt(d1.actions.size());
-				else {
-					System.out.println("invalid5");
+				else 
 					continue;
-				}
+
 				int id1 = d1.actions.get(k);
 				if (id1 < 0)
 					continue;
 				if (d2.actions.size()>0)
 					l = myRandom.nextInt(d2.actions.size());
-				else {
-					System.out.println("invalid6");
+				else 
 					continue;
-				}
+				
 				int id2 = d2.actions.get(l);
 				if (id2 < 0)
 					continue;
@@ -143,7 +135,13 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 			
 			//if the user is a conductor he can also be moved to a new drive
 			int p = myRandom.nextInt(2);
-			if (p == 0){
+			if ((p == 1)&&(AIState.Users.get(d1.driverId-1).isConductor())){//move user - conductor to a new drive
+				AIState newState2 = new AIState(state);
+				newState2.move(i, action);
+				String S = AIState.MOVE + " i: " + i + " action: " + action + "\n " + newState2.toString();
+                retVal.add(new Successor(S, newState2));
+			}
+			else {
 				//Determine the positions to be moved to
 				int ind1,ind2;
 				if (d2.actions.size()-2>0)
@@ -164,12 +162,7 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 				}
 				else 
 					continue;
-			} else if (p == 1){//move user - conductor to a new drive
-				AIState newState2 = new AIState(state);
-				newState2.move(i, action);
-				String S = AIState.MOVE + " i: " + i + " action: " + action + "\n " + newState2.toString();
-                retVal.add(new Successor(S, newState2));
-			}
+			} 
 			
 		}
 	}
