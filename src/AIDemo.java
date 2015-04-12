@@ -4,6 +4,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.System;
 
 import aima.search.framework.Problem;
@@ -16,12 +19,34 @@ import aima.search.informed.SimulatedAnnealingSearch;
 public class AIDemo {
     
     public static void main(String[] args){
-
-    	// What value to use as a seed?
-        AIState State = new AIState(200,100,1);
-        AIHillClimbingSearch(State);
-        //AISimulatedAnnealingSearch(State);
-
+    	
+    	PrintWriter writer = null;
+		try {
+			writer = new PrintWriter("/home/georgia/Desktop/AI/results.txt", "UTF-8");
+			writer.println("The first line");
+	    	writer.println("The second line");
+	    	
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	
+    	for (int s=1; s<11; s++ ){
+    		long startTime = System.nanoTime();
+    		// What value to use as a seed?
+    		AIState State = new AIState(10,4,1,1);
+    		AIHillClimbingSearch(State);
+    		//AISimulatedAnnealingSearch(State);
+    		long endTime = System.nanoTime();
+    		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds
+    		System.out.println("\n EXECUTION TIME: 	" + duration/1000000 + "ms = " + duration/1000000000 + "sec");
+    		writer.println("\n EXECUTION TIME: 	" + duration/1000000 + "ms = " + duration/1000000000 + "sec");
+    	}	
+    	writer.close();
     }
    
  

@@ -164,7 +164,7 @@ public class AIState {
 		 * If the 30km limit is reached for every driver then we start again from the 1st.
 		 * The initial state is not necessarily  a solution.
 		 */
-		drives = new ArrayList<Drive>(numberOfDrivers);
+		drives = new ArrayList<Drive>();
 		
 		for (int i=0; i<Users.size(); i++) {
 			if (Users.get(i).isConductor()) {
@@ -186,7 +186,7 @@ public class AIState {
 				drives.get(k).distance += calculateDistance(drives.get(k), Users.get(i));
 				drives.get(k).currentCoords.x = Users.get(i).getCoordDestinoX();
 				drives.get(k).currentCoords.y = Users.get(i).getCoordDestinoY();
-				if (drives.get(k).distance > 300)
+				if (drives.get(k).distance > 100)
 				    k++;
 				if (k == drives.size())
 					k = 0;
@@ -206,7 +206,6 @@ public class AIState {
 			if (drives.get(i).distance > 300) above30cnt += drives.get(i).distance - 300;
 		}
 		totalActiveDrivers = numberOfDrivers;
-
 	    recalculateMetrics();	
 	}
 	

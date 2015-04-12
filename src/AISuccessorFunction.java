@@ -16,7 +16,9 @@ public class AISuccessorFunction implements SuccessorFunction {
 		System.out.println("State heuristic: " + heuristic.getHeuristicValue(state));
 		
 		//SWAP
+		
 		for (int i = 0; i != state.drives.size(); ++i) {
+			//System.out.println("SWAP");
 			AIState.Drive d = state.drives.get(i);
 			for (int j = 1; j < d.actions.size() - 1; ++j) {
 		        for (int k = j + 1; k < d.actions.size() - 1; ++k) {
@@ -30,7 +32,9 @@ public class AISuccessorFunction implements SuccessorFunction {
 			}
 		}
 		//EXCHANGE
+		
 		for (int i = 0; i != state.drives.size(); ++i) {
+			//System.out.println("EXCHANGE");
 			AIState.Drive d1 = state.drives.get(i);
 			for (int j = i + 1; j != state.drives.size(); ++j) {
 				AIState.Drive d2 = state.drives.get(j);
@@ -58,15 +62,19 @@ public class AISuccessorFunction implements SuccessorFunction {
 			}
 		}
 		//MOVE
+		
 		for (int i = 0; i != state.drives.size(); ++i) {
+			//System.out.println("MOVE");
 			AIState.Drive d1 = state.drives.get(i);
 			for (int j = 0; j != state.drives.size(); ++j) {
+				//System.out.println("LOOP1");
 				if (i == j)
 					continue;
 				
 				AIState.Drive d2 = state.drives.get(j);
 				
 				for (int k = 0; k != d1.actions.size(); ++k) {
+					//System.out.println("LOOP2");
 					int action = d1.actions.get(k);
 					
 					if (action<0)
@@ -77,7 +85,9 @@ public class AISuccessorFunction implements SuccessorFunction {
 					
 					//Determine the positions to be moved to
 					for (int ind1 = 1; ind1 < (d2.actions.size() - 1); ++ind1) {
+						//System.out.println("LOOP3");
 						for (int ind2 = ind1 + 1; ind2 < (d2.actions.size() - 1); ++ind2) {
+							//System.out.println("LOOP4");
 							AIState newState = new AIState(state);
 		            		boolean removes = newState.move(i, j, action, ind1, ind2);
 		            		boolean valid = removes ? newState.actionRestrictionsValid() : 
@@ -100,6 +110,7 @@ public class AISuccessorFunction implements SuccessorFunction {
 				}
 			}
 		}
+		
 		System.out.println("Found " + retVal.size());
 		for (Object o : retVal) {
 			Successor suc = (Successor)o;
