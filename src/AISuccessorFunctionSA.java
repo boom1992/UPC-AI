@@ -12,7 +12,7 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 		Random myRandom = new Random();
 		ArrayList retVal = new ArrayList();
 		AIState state = (AIState)obj;
-		AIHeuristicFunction heuristic = new AIHeuristicFunction();
+		AIHeuristicFunction2 heuristic = new AIHeuristicFunction2();
 		System.out.println("State heuristic: " + heuristic.getHeuristicValue(state));
 		int op,i,j,k,l;
 		boolean valid,opfound = false;
@@ -20,7 +20,7 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 		
 	while (!opfound){
 		//Pick an operator at random (0 - Swap, 1 - Exchange, 2 - Move)
-		op = myRandom.nextInt(2);
+		op = myRandom.nextInt(3);
 		
 		if (op == 0){	
 			//SWAP	
