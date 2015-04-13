@@ -12,8 +12,8 @@ public class AISuccessorFunction implements SuccessorFunction {
 	public List getSuccessors(Object s) {
 		ArrayList retVal = new ArrayList();
 		AIState state = (AIState)s;
-		AIHeuristicFunction heuristic = new AIHeuristicFunction();
-		System.out.println("State heuristic: " + heuristic.getHeuristicValue(state));
+		//AIHeuristicFunction heuristic = new AIHeuristicFunction();
+		//System.out.println("State heuristic: " + heuristic.getHeuristicValue(state));
 		
 		//SWAP
 		
@@ -38,13 +38,11 @@ public class AISuccessorFunction implements SuccessorFunction {
 			AIState.Drive d1 = state.drives.get(i);
 			for (int j = i + 1; j != state.drives.size(); ++j) {
 				AIState.Drive d2 = state.drives.get(j);
-				//Don't swap out the driver --> Why not??
-				//for (int k = 1; k != d1.actions.size() - 1; ++k) {
 				for (int k = 0; k != d1.actions.size(); ++k) {
 					int id1 = d1.actions.get(k);
 					if (id1 < 0)
 						continue;
-					//for (int l = 1; l != d2.actions.size() - 1; ++l) {
+				
 					for (int l = 0; l != d2.actions.size(); ++l) {
 						int id2 = d2.actions.get(l);
 						if (id2 < 0)
@@ -67,14 +65,14 @@ public class AISuccessorFunction implements SuccessorFunction {
 			//System.out.println("MOVE");
 			AIState.Drive d1 = state.drives.get(i);
 			for (int j = 0; j != state.drives.size(); ++j) {
-				//System.out.println("LOOP1");
+
 				if (i == j)
 					continue;
 				
 				AIState.Drive d2 = state.drives.get(j);
 				
 				for (int k = 0; k != d1.actions.size(); ++k) {
-					//System.out.println("LOOP2");
+					
 					int action = d1.actions.get(k);
 					
 					if (action<0)
@@ -85,9 +83,9 @@ public class AISuccessorFunction implements SuccessorFunction {
 					
 					//Determine the positions to be moved to
 					for (int ind1 = 1; ind1 < (d2.actions.size() - 1); ++ind1) {
-						//System.out.println("LOOP3");
+						
 						for (int ind2 = ind1 + 1; ind2 < (d2.actions.size() - 1); ++ind2) {
-							//System.out.println("LOOP4");
+							
 							AIState newState = new AIState(state);
 		            		boolean removes = newState.move(i, j, action, ind1, ind2);
 		            		boolean valid = removes ? newState.actionRestrictionsValid() : 
@@ -111,15 +109,15 @@ public class AISuccessorFunction implements SuccessorFunction {
 			}
 		}
 		
-		System.out.println("Found " + retVal.size());
-		for (Object o : retVal) {
+		//System.out.println("Found " + retVal.size());
+		/*for (Object o : retVal) {
 			Successor suc = (Successor)o;
 			double heuristicValue = heuristic.getHeuristicValue(suc.getState());
 			System.out.println("Successor-heuristic: " + heuristicValue);
 			if (heuristicValue < 1) {
 				System.out.println(suc.getAction());
 			}
-		} 
+		} */
 		return retVal;
 	}
 

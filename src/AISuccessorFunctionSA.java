@@ -12,8 +12,8 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 		Random myRandom = new Random();
 		ArrayList retVal = new ArrayList();
 		AIState state = (AIState)obj;
-		AIHeuristicFunction heuristic = new AIHeuristicFunction();
-		System.out.println("State heuristic: " + heuristic.getHeuristicValue(state));
+		//AIHeuristicFunction heuristic = new AIHeuristicFunction();
+		//System.out.println("State heuristic: " + heuristic.getHeuristicValue(state));
 		int op,i,j,k,l;
 		boolean valid,opfound = false;
 				
@@ -77,23 +77,29 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 				if (i == j) continue;
 				
 				AIState.Drive d2 = state.drives.get(j);
-				if (d1.actions.size()>0)
-					k = myRandom.nextInt(d1.actions.size());
-				else 
-					continue;
+				
+				int id1 = 0;
+				k=0;
+				do{
+					if (d1.actions.size()>0)
+						k = myRandom.nextInt(d1.actions.size());
+					else 
+						continue;
 
-				int id1 = d1.actions.get(k);
-				if (id1 < 0)
-					continue;
-				if (d2.actions.size()>0)
-					l = myRandom.nextInt(d2.actions.size());
-				else 
-					continue;
+					id1 = d1.actions.get(k);
+					
+				}while(id1<0);
+				int id2 = 0;
+				l=0;
+				do{
+					if (d2.actions.size()>0)
+						l = myRandom.nextInt(d2.actions.size());
+					else 
+						continue;
 				
-				int id2 = d2.actions.get(l);
-				if (id2 < 0)
-					continue;
+					id2 = d2.actions.get(l);
 				
+				}while (id2<0);
 				if(((k==0)&&(!state.Users.get(id2-1).isConductor()))||((l==0)&&(!state.Users.get(id1-1).isConductor())))
 					continue;
 				else {
@@ -121,14 +127,16 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 			if (i == j)
 				continue;
 			AIState.Drive d2 = state.drives.get(j);
-			
-			if (d1.actions.size()>0)
-				k = myRandom.nextInt(d1.actions.size());
-			else
-				continue;
-			int action = d1.actions.get(k);
-			if (action<0)
-				continue;
+			int action = 0;
+			k=0;
+			do{ 
+				if (d1.actions.size()>0)
+					k = myRandom.nextInt(d1.actions.size());
+				else
+					continue;
+				action = d1.actions.get(k);
+				
+			} while (action<0);
 			//Don't move out the driver unless the driver is the only one left
 			if ((k==0)&&(d1.actions.size()!=2))
 				continue;
@@ -167,13 +175,13 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 		}
 	}
 		
-		
+		/*
 		System.out.println("Found " + retVal.size());
 		for (Object o : retVal) {
 			Successor suc = (Successor)o;
 			System.out.println("Successor-heuristic: " + heuristic.getHeuristicValue(suc.getState()));
 			System.out.println(suc.getAction());
-		} 
+		} */
 		return retVal;
 	}
 

@@ -22,9 +22,7 @@ public class AIState {
 		public Drive(Drive d) {
 			driverId = d.driverId;
 			distance = d.distance;
-			//FIXME: Check if this is working
 			actions = new ArrayList<Integer>(d.actions);
-			//actions = (ArrayList<Integer>)d.actions.clone();
 			currentCoords = new Coords(d.currentCoords);
 		}
 		public Drive(int dId) {
@@ -64,16 +62,12 @@ public class AIState {
 	
 	//copy constructor
 	public AIState(AIState state) {
-		//numberOfUsers = state.numberOfUsers;
-		//numberOfDrivers = state.numberOfDrivers;
+		
 		drives = new ArrayList<Drive>();
 		for (Drive d : state.drives) {
 			drives.add(new Drive(d));
 		}
-		//Users = state.Users;
-		//FIXME: adjust the metrics according to the operators that are applied
-		//totalDistance = state.totalDistance;
-		//totalActiveDrivers = state.totalActiveDrivers;
+		
 	}
 	
 	/* Constructor
@@ -94,13 +88,9 @@ public class AIState {
 		above30cnt = 0;
 		
 		/* Generation of an initial state of type 1
-		 * Assign passengers to the 1st driver until we reach the 30km limit
-		 * then move on to the 2nd one, etc.
-		 * If the 30km limit is reached for every driver then we start again from the 1st.
-		 * The initial state is not necessarily  a solution.
+		 * Assign passengers using a Round-Robin principle
 		 */
-		drives = new ArrayList<Drive>(numberOfDrivers);
-		//drives.get(j).distance = 0;
+		drives = new ArrayList<Drive>();
 		
 		for (int i=0; i<Users.size(); i++) {
 			if (Users.get(i).isConductor()) {
@@ -128,7 +118,7 @@ public class AIState {
 			}
 		}
 		
-		//adding the last negative element to the actions lists
+		//adding the last negative element to the actions lists, drop off of the driver
 		for (int i = 0; i<drives.size();  i++) {
 			drives.get(i).actions.add(-drives.get(i).actions.get(0));
 			drives.get(i).distance += Math.abs(drives.get(i).currentCoords.x - Users.get(drives.get(i).actions.get(0)-1).getCoordDestinoX()) +
@@ -158,7 +148,7 @@ public class AIState {
 		totalActiveDrivers = 0;
 		above30cnt = 0;
 		
-		/* Generation of an initial state of type 1
+		/* Generation of an initial state of type 2
 		 * Assign passengers to the 1st driver until we reach the 30km limit
 		 * then move on to the 2nd one, etc.
 		 * If the 30km limit is reached for every driver then we start again from the 1st.
@@ -186,14 +176,14 @@ public class AIState {
 				drives.get(k).distance += calculateDistance(drives.get(k), Users.get(i));
 				drives.get(k).currentCoords.x = Users.get(i).getCoordDestinoX();
 				drives.get(k).currentCoords.y = Users.get(i).getCoordDestinoY();
-				if (drives.get(k).distance > 100)
+				if (drives.get(k).distance > 150)
 				    k++;
 				if (k == drives.size())
 					k = 0;
 			}
 		}
 		
-		//adding the last negative element to the actions lists
+		//adding the last negative element to the actions lists, drop off of the driver
 		for (int i = 0; i<drives.size();  i++) {
 			drives.get(i).actions.add(-drives.get(i).actions.get(0));
 			drives.get(i).distance += Math.abs(drives.get(i).currentCoords.x - Users.get(drives.get(i).actions.get(0)-1).getCoordDestinoX()) +
@@ -256,8 +246,7 @@ public class AIState {
 					d.currentCoords.y = Users.get(d.actions.get(j)-1).getCoordOrigenY();
 				}
 			}
-			//drives.get(i).distance += Math.abs(drives.get(i).currentCoords.x - Users.get(drives.get(i).actions.get(0)-1).getCoordDestinoX()) +
-			//		Math.abs(drives.get(i).currentCoords.y - Users.get(drives.get(i).actions.get(0)-1).getCoordDestinoY());
+			
 		}
 		
 		totalDistance = 0;
@@ -266,8 +255,7 @@ public class AIState {
 		for (int i = 0; i<drives.size();  i++) {
 			totalDistance += drives.get(i).distance;
 			if (drives.get(i).distance > 300) above30cnt += drives.get(i).distance - 300;
-			//if (drives.get(i).actions.size()!=0)
-				//totalActiveDrivers++;
+
 		}	
 		totalActiveDrivers = drives.size();
 	}

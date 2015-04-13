@@ -1,5 +1,6 @@
 
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -22,7 +23,7 @@ public class AIDemo {
     	
     	PrintWriter writer = null;
 		try {
-			writer = new PrintWriter("/home/georgia/Desktop/AI/results.txt", "UTF-8");
+			writer = new PrintWriter("/home/georgia/Desktop/AI/test5.txt", "UTF-8");
 			writer.println("The first line");
 	    	writer.println("The second line");
 	    	
@@ -35,22 +36,25 @@ public class AIDemo {
 		}
     	
     	
-    	for (int s=1; s<11; s++ ){
+    	//for (int s=1; s<11; s++ ){
+    		//writer.println("Seed = "+ s + "**********************");
     		long startTime = System.nanoTime();
-    		// What value to use as a seed?
-    		AIState State = new AIState(10,4,1,1);
-    		AIHillClimbingSearch(State);
-    		//AISimulatedAnnealingSearch(State);
+   
+    		AIState State = new AIState(10,4,1);
+    		//AIHillClimbingSearch(State,writer);
+    		AISimulatedAnnealingSearch(State, writer);
+    		
     		long endTime = System.nanoTime();
     		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds
-    		System.out.println("\n EXECUTION TIME: 	" + duration/1000000 + "ms = " + duration/1000000000 + "sec");
-    		writer.println("\n EXECUTION TIME: 	" + duration/1000000 + "ms = " + duration/1000000000 + "sec");
-    	}	
+    		System.out.println("\n Execution Time: 	" + duration/1000000 + "ms");
+    		//writer.println("\n EXECUTION TIME: 	" + duration/1000000 + "ms = " + duration/1000000000 + "sec");
+    		//}
+    	//}	
     	writer.close();
     }
    
  
-    private static void AIHillClimbingSearch(AIState State) {
+    private static void AIHillClimbingSearch(AIState State, PrintWriter writer) {
         System.out.println("\nAI HillClimbing  -->");
         try {
             Problem problem =  new Problem(State,new AISuccessorFunction(), new AIGoalTest(),new AIHeuristicFunction());
@@ -59,30 +63,46 @@ public class AIDemo {
             
             System.out.println("INITIAL STATE: " + State.toString());
             printActions(agent.getActions());
+            
+            
+           // System.out.println("PRINT ACTIONS:");
+            for (Object o : agent.getActions()) {
+            	System.out.println(o.toString());
+            	//writer.println(o.toString());
+            }
+           
+    		
             printInstrumentation(agent.getInstrumentation());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     
-    private static void AISimulatedAnnealingSearch(AIState State) {
+    private static void AISimulatedAnnealingSearch(AIState State, PrintWriter writer) {
         System.out.println("\nAI Simulated Annealing  -->");
+       
         try {
             Problem problem =  new Problem(State,new AISuccessorFunctionSA(), new AIGoalTest(),new AIHeuristicFunction());
             //Check Simulated Annealing Parameters 
-            SimulatedAnnealingSearch search =  new SimulatedAnnealingSearch(2000,100,5,0.001);
+            SimulatedAnnealingSearch search =  new SimulatedAnnealingSearch(125000,100,125,0.01);
             //search.traceOn();
-            SearchAgent agent = new SearchAgent(problem,search);
+           SearchAgent agent = new SearchAgent(problem,search);
             
+           AIHeuristicFunction heuristic = new AIHeuristicFunction();
             System.out.println("PRINT ACTIONS:");
             for (Object o : agent.getActions()) {
             	System.out.println(o.toString());
+            	writer.println(o.toString());
+            	writer.println("State heuristic: " + heuristic.getHeuristicValue(o));
             }
+          
+        
             //printActions(agent.getActions());
             printInstrumentation(agent.getInstrumentation());
         } catch (Exception e) {
             e.printStackTrace();
         }
+       
     }
     
     private static void printInstrumentation(Properties properties) {
