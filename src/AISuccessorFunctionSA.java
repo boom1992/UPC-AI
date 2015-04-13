@@ -12,7 +12,7 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 		Random myRandom = new Random();
 		ArrayList retVal = new ArrayList();
 		AIState state = (AIState)obj;
-		AIHeuristicFunction2 heuristic = new AIHeuristicFunction2();
+		AIHeuristicFunction heuristic = new AIHeuristicFunction();
 		System.out.println("State heuristic: " + heuristic.getHeuristicValue(state));
 		int op,i,j,k,l;
 		boolean valid,opfound = false;
@@ -135,7 +135,7 @@ public class AISuccessorFunctionSA implements SuccessorFunction {
 			
 			//if the user is a conductor he can also be moved to a new drive
 			int p = myRandom.nextInt(2);
-			if ((p == 1)&&(AIState.Users.get(d1.driverId-1).isConductor())){//move user - conductor to a new drive
+			if ((p == 0)&&(AIState.Users.get(d1.actions.get(k)-1).isConductor())&&(k!=0)){//move user - conductor to a new drive
 				AIState newState2 = new AIState(state);
 				newState2.move(i, action);
 				String S = AIState.MOVE + " i: " + i + " action: " + action + "\n " + newState2.toString();
