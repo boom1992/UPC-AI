@@ -1,0 +1,11 @@
+IA - Practica 1
+
+After importing the project into Eclipse and possibly adding the necessary libraries, we can look into the AIDemo.java file.
+This file contains the main-method to execute this project.
+
+In this method we can see the line that creates the initial state:
+AIState State = new AIState(400,150,s);
+
+The parameters are in this order: number of users, number of conductors and seed.
+
+After this line we can see the two lines that call the actual algorithms. One of those lines should be commented, only one should be executed at each time!
