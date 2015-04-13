@@ -23,6 +23,7 @@ public class AIDemo {
     	
     	PrintWriter writer = null;
 		try {
+			//CHANGE THIS LINE TO LOCAL FILE
 			writer = new PrintWriter("/home/georgia/Desktop/AI/test5.txt", "UTF-8");
 			writer.println("The first line");
 	    	writer.println("The second line");
@@ -40,7 +41,10 @@ public class AIDemo {
     		//writer.println("Seed = "+ s + "**********************");
     		long startTime = System.nanoTime();
    
-    		AIState State = new AIState(10,4,1);
+    		//POSSIBLY CHANGE PARAMETERS OF STATE
+    		AIState State = new AIState(200,100,1);
+    		
+    		//COMMENT/UNCOMMENT FOR DIFFERENT ALGORITHM
     		//AIHillClimbingSearch(State,writer);
     		AISimulatedAnnealingSearch(State, writer);
     		

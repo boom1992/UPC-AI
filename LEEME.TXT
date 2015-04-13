@@ -7,5 +7,9 @@ In this method we can see the line that creates the initial state:
 AIState State = new AIState(400,150,s);
 
 The parameters are in this order: number of users, number of conductors and seed.
+This initializes the state with the first constructor.
+The second constructor can be executed by adding another random integer as parameter:
+AIState State = new AIState(400,150,s,2);
 
 After this line we can see the two lines that call the actual algorithms. One of those lines should be commented, only one should be executed at each time!
+
